@@ -37,3 +37,7 @@ class Note:
             surface: pygame.Surface object
         """
         surface.blit(self.image, self.rect)
+
+
+# [ ]: Add a class for the player character which is inherited from Note class
+# [ ]: Add class for obstacles which is inherited from Note class
