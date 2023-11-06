@@ -1,11 +1,8 @@
 import pygame
 import sys
+import constant
 
 from pygame.locals import *
-
-WIDTH = 800
-HEIGHT = 450
-STAFFPOS = (75, 150, 225, 300, 375)
 
 
 class Note:
@@ -68,7 +65,7 @@ class Player(Note):
     ):
         """Set default position of the player class at third staff line in the beginning"""
         self.staff_loc = staff_loc
-        super().__init__(image, x, STAFFPOS[staff_loc], offset_x, offset_y)
+        super().__init__(image, x, constant.STAFFPOS[staff_loc], offset_x, offset_y)
 
     def staff_up(self):
         self.staff_loc -= 1
@@ -111,7 +108,7 @@ class Obstacle(Note):
             image += "eight-line.jpeg"
         elif note_type == 5:
             image += "sixteenth-notes.jpeg"
-        super().__init__(image, x, STAFFPOS[staff_loc], offset_x, offset_y)
+        super().__init__(image, x, constant.STAFFPOS[staff_loc], offset_x, offset_y)
 
     def move_left(self):
         self.x -= 1
