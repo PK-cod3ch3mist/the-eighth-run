@@ -28,6 +28,8 @@ class Note:
         self.image = image
         self.x = x
         self.y = y
+        self.offset_x = offset_x
+        self.offset_y = offset_y
         self.rect = self.image.get_rect(center=(x + offset_x, y + offset_y))
 
     def draw(self, surface):
@@ -57,8 +59,8 @@ class Player(Note):
 
     def __init__(
         self,
-        image="assets/images/eight-note.jpeg",
-        x=20,
+        image=pygame.image.load("assets/images/eight-note.jpeg"),
+        x=25,
         staff_loc=2,
         offset_x=0,
         offset_y=-20,
@@ -72,43 +74,3 @@ class Player(Note):
 
     def staff_down(self):
         self.staff_loc += 1
-
-
-# [x]: Add class for obstacles which is inherited from Note class
-# TODO: Add collision detection for obstacles
-class Obstacle(Note):
-    """
-    Obstacle class as a type of Note
-
-    Attributes:
-        staff_loc   : int
-        note_type   : int (Type of note for random generation)
-
-    Methods:
-        move_left() : moves obstacles across the screen
-    """
-
-    def __init__(self, note_type, x, staff_loc, offset_x=0, offset_y=-20):
-        """
-        Assign an obstacle note based upon a note_type argument provided.
-        This is done so we can randomly generate obstacles later on in the game
-        """
-        self.note_type = note_type
-        self.staff_loc = staff_loc
-        image = "assets/images/"
-        if note_type == 0:
-            image += "whole-note.jpeg"
-        elif note_type == 1:
-            image += "half-note.jpeg"
-        elif note_type == 2:
-            image += "qtr-note.jpeg"
-        elif note_type == 3:
-            image += "eight-note.jpeg"
-        elif note_type == 4:
-            image += "eight-line.jpeg"
-        elif note_type == 5:
-            image += "sixteenth-notes.jpeg"
-        super().__init__(image, x, constant.STAFFPOS[staff_loc], offset_x, offset_y)
-
-    def move_left(self):
-        self.x -= 1
