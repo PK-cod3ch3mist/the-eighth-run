@@ -2,7 +2,7 @@ import random
 import pygame
 import sys
 import notes
-import constant
+import globals
 
 from pygame.locals import *
 
@@ -20,7 +20,7 @@ class Obstacle(notes.Note):
     """
 
     def __init__(
-        self, note_type, staff_loc, x=constant.WIDTH - 20, offset_x=0, offset_y=-20
+        self, note_type, staff_loc, x=globals.WIDTH - 20, offset_x=0, offset_y=-20
     ):
         """
         Assign an obstacle note based upon a note_type argument provided.
@@ -30,21 +30,24 @@ class Obstacle(notes.Note):
         self.staff_loc = staff_loc
         image = "assets/images/"
         if note_type == 0:
-            image += "whole-note.jpeg"
+            image += "whole-note.png"
             offset_y = 0
         elif note_type == 1:
-            image += "half-note.jpeg"
+            image += "half-note.png"
         elif note_type == 2:
-            image += "qtr-note.jpeg"
+            image += "qtr-note.png"
         elif note_type == 3:
-            image += "eight-note.jpeg"
+            image += "eight-note.png"
         elif note_type == 4:
-            image += "eight-line.jpeg"
+            image += "eight-line.png"
         elif note_type == 5:
-            image += "sixteenth-notes.jpeg"
+            image += "sixteenth-notes.png"
 
         image = pygame.image.load(image)
-        super().__init__(image, x, constant.STAFFPOS[staff_loc], offset_x, offset_y)
+        super().__init__(image, x, globals.STAFFPOS[staff_loc], offset_x, offset_y)
+        colorImage = pygame.Surface(self.image.get_size()).convert_alpha()
+        colorImage.fill((245, 123, 86, 255))
+        self.image.blit(colorImage, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
     def move_left(self, surface):
         """
@@ -73,7 +76,7 @@ class ObstacleList:
         move_obstacles() : moves all obstacles in the list
     """
 
-    RIGHT_LIMIT = constant.WIDTH / 2
+    RIGHT_LIMIT = globals.WIDTH / 2
 
     def __init__(self):
         """
@@ -99,8 +102,9 @@ class ObstacleList:
                 break
 
         obstacle = Obstacle(note_type=n_type, staff_loc=s_loc)
-        print("Adding obstacle at staff line", s_loc)
+        # print("Adding obstacle at staff line", s_loc)
         self.obstacles.append(obstacle)
+        globals.obstacles_group.add(obstacle)
         self.rightmost_occupied_px[s_loc] = obstacle.x + obstacle.rect.width / 2
 
         return True
@@ -110,6 +114,7 @@ class ObstacleList:
         Remove an obstacle from the list
         """
         self.obstacles.remove(obstacle)
+        globals.obstacles_group.remove(obstacle)
 
     def move_obstacles(self, surface):
         """

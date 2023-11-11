@@ -1,6 +1,6 @@
 import pygame
 import sys
-import constant
+import globals
 
 from pygame.locals import *
 
@@ -23,10 +23,10 @@ class Staff:
         Args:
             y: int
         """
-        self.surf = pygame.Surface((constant.WIDTH, self.THICKNESS))
+        self.surf = pygame.Surface((globals.WIDTH, self.THICKNESS))
         self.surf.fill((255, 255, 255))
         self.y = y
-        self.rect = self.surf.get_rect(center=(constant.WIDTH / 2, self.y))
+        self.rect = self.surf.get_rect(center=(globals.WIDTH / 2, self.y))
 
     def draw(self, surface):
         """

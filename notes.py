@@ -1,11 +1,11 @@
 import pygame
 import sys
-import constant
+import globals
 
 from pygame.locals import *
 
 
-class Note:
+class Note(pygame.sprite.Sprite):
     """
     Class for a pygame sprite that will later serve as base class to Player and Obstacles
 
@@ -25,12 +25,14 @@ class Note:
             x    : int
             y    : int
         """
+        super().__init__()
         self.image = image
         self.x = x
         self.y = y
         self.offset_x = offset_x
         self.offset_y = offset_y
         self.rect = self.image.get_rect(center=(x + offset_x, y + offset_y))
+        self.mask = pygame.mask.from_surface(self.image.convert_alpha())
 
     def draw(self, surface):
         """
@@ -59,18 +61,53 @@ class Player(Note):
 
     def __init__(
         self,
-        image=pygame.image.load("assets/images/eight-note.jpeg"),
-        x=25,
+        image=pygame.image.load("assets/images/eight-note.png"),
+        x=40,
         staff_loc=2,
         offset_x=0,
         offset_y=-20,
     ):
         """Set default position of the player class at third staff line in the beginning"""
         self.staff_loc = staff_loc
-        super().__init__(image, x, constant.STAFFPOS[staff_loc], offset_x, offset_y)
+        super().__init__(image, x, globals.STAFFPOS[staff_loc], offset_x, offset_y)
+        colorImage = pygame.Surface(self.image.get_size()).convert_alpha()
+        colorImage.fill((134, 217, 119, 255))
+        self.image.blit(colorImage, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
-    def staff_up(self):
+    # FIXME: Player chracter goes directly to last lines and then reports index out of range error
+    def staff_up(self, surface):
+        """
+        Move to the staff line above
+        """
+        if self.staff_loc == 0:
+            return
+        pygame.draw.rect(surface, (0, 0, 0), self.rect)
+        prev_y = globals.STAFFPOS[self.staff_loc]
         self.staff_loc -= 1
+        new_y = globals.STAFFPOS[self.staff_loc]
+        self.rect.move_ip(0, new_y - prev_y)
+        pygame.mixer.Sound.play(globals.STAFFSOUNDS[4 - self.staff_loc])
+        self.draw(surface)
 
-    def staff_down(self):
+    def staff_down(self, surface):
+        """
+        Move to the staff line below
+        """
+        if self.staff_loc == 4:
+            return
+        pygame.draw.rect(surface, (0, 0, 0), self.rect)
+        prev_y = globals.STAFFPOS[self.staff_loc]
         self.staff_loc += 1
+        new_y = globals.STAFFPOS[self.staff_loc]
+        self.rect.move_ip(0, new_y - prev_y)
+        pygame.mixer.Sound.play(globals.STAFFSOUNDS[4 - self.staff_loc])
+        self.draw(surface)
+
+    def check_collision(self):
+        hits = pygame.sprite.spritecollide(
+            self, globals.obstacles_group, False, collided=pygame.sprite.collide_mask
+        )
+        if hits:
+            print("Collision detected: " + str(hits[0]))
+            pygame.quit()
+            sys.exit()
