@@ -45,8 +45,7 @@ class Note(pygame.sprite.Sprite):
 
 
 # [x]: Add a class for the player character which is inherited from Note class
-# TODO: Add collision detection and player character convert feature
-# TODO: Add music when the player scales up or down the staff lines
+# TODO: Add player character convert feature
 class Player(Note):
     """
     Player Class as a type of Note (attributes inherited)
