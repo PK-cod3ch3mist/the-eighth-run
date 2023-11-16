@@ -19,17 +19,26 @@ FramePerSec = pygame.time.Clock()
 game_obstacles = obstacles.ObstacleList()
 player1 = notes.Player()
 
+logging.basicConfig(
+    filename="./gamelog.log",
+    format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
+    datefmt="%H:%M:%S",
+    level=logging.DEBUG,
+)
+
+logger = logging.getLogger("main")
+
 
 def check_collision():
     hits = pygame.sprite.spritecollide(
         player1, globals.obstacles_group, False, collided=pygame.sprite.collide_mask
     )
     if hits:
-        print("Collision detected:")
+        logger.info("Collision detected:")
         if player1.hit_count < 3:
             # Increase hit count and display it
             player1.hit_count += 1
-            print("Hit count: " + str(player1.hit_count))
+            logger.debug("Hit count: " + str(player1.hit_count))
 
             # Remove the obstacles from the list
             for obj in hits:
@@ -39,7 +48,7 @@ def check_collision():
             # Convert the player sprite to that of the obstacle
             player1.convert_to_obstacle(DISPLAYSURF, hits[0])
         else:
-            print("Game over")
+            logger.debug("Game over")
             pygame.quit()
             sys.exit()
 
