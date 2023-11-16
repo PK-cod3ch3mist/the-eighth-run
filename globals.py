@@ -6,8 +6,8 @@ from enum import Enum
 from pygame.locals import *
 
 WIDTH = 1000
-HEIGHT = 450
-STAFFPOS = (75, 150, 225, 300, 375)
+HEIGHT = 750
+STAFFPOS = (175, 275, 375, 475, 575)
 FPS = 60
 
 # Staff change sounds
