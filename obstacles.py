@@ -94,10 +94,10 @@ class ObstacleList:
             return False
 
         # randomly generate a number
-        n_type = random.randint(0, 5)
+        n_type = random.randint(0, globals.TOTAL_NOTES - 1)
         # randomly generate a staff location
         while True:
-            s_loc = random.randint(0, 4)
+            s_loc = random.randint(0, globals.TOTAL_STAFFS - 1)
             if self.rightmost_occupied_px[s_loc] == 0:
                 break
 

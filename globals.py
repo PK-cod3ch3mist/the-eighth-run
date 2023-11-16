@@ -19,4 +19,7 @@ STAFFSOUNDS = (
     pygame.mixer.Sound("assets/sounds/F4.wav"),
 )
 
+TOTAL_STAFFS = len(STAFFSOUNDS)
+TOTAL_NOTES = 6
+
 obstacles_group = pygame.sprite.Group()
