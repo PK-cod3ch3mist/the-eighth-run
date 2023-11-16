@@ -28,6 +28,7 @@ class Obstacle(notes.Note):
         """
         self.note_type = note_type
         self.staff_loc = staff_loc
+        # FIXME: Change the offset x values so that all the notes align up properly on the left edge
         image = "assets/images/"
         if note_type == 0:
             image += "whole-note.png"
@@ -40,12 +41,14 @@ class Obstacle(notes.Note):
             image += "eight-note.png"
         elif note_type == 4:
             image += "eight-line.png"
+            offset_x = 15
         elif note_type == 5:
             image += "sixteenth-notes.png"
+            offset_x = 35
 
         image = pygame.image.load(image)
         super().__init__(image, x, globals.STAFFPOS[staff_loc], offset_x, offset_y)
-        colorImage = pygame.Surface(self.image.get_size()).convert_alpha()
+        colorImage = pygame.Surface(self.orig_image.get_size()).convert_alpha()
         colorImage.fill((245, 123, 86, 255))
         self.image.blit(colorImage, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
@@ -60,6 +63,12 @@ class Obstacle(notes.Note):
         self.rect.move_ip(-1, 0)
         # draw the obstacle at its new position
         self.draw(surface)
+
+    def hide_obstacle(self, surface):
+        """
+        Hide the obstacle
+        """
+        pygame.draw.rect(surface, (0, 0, 0), self.rect)
 
 
 class ObstacleList:
@@ -123,7 +132,7 @@ class ObstacleList:
         for obstacle in self.obstacles:
             obstacle.move_left(surface)
             w = obstacle.rect.width
-            if obstacle.x + w / 2 < 0:
+            if obstacle.x + obstacle.offset_x + w / 2 < 0:
                 self.remove_obstacle(obstacle)
 
         for i in range(0, 5):

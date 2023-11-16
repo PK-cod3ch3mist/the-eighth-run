@@ -19,22 +19,50 @@ FramePerSec = pygame.time.Clock()
 game_obstacles = obstacles.ObstacleList()
 player1 = notes.Player()
 
+
+def check_collision():
+    hits = pygame.sprite.spritecollide(
+        player1, globals.obstacles_group, False, collided=pygame.sprite.collide_mask
+    )
+    if hits:
+        print("Collision detected:")
+        if player1.hit_count < 3:
+            # Increase hit count and display it
+            player1.hit_count += 1
+            print("Hit count: " + str(player1.hit_count))
+
+            # Remove the obstacles from the list
+            for obj in hits:
+                game_obstacles.remove_obstacle(obj)
+                obj.hide_obstacle(DISPLAYSURF)
+
+            # Convert the player sprite to that of the obstacle
+            player1.convert_to_obstacle(DISPLAYSURF, hits[0])
+        else:
+            print("Game over")
+            pygame.quit()
+            sys.exit()
+
+
 while True:  # main game loop
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                player1.staff_up(DISPLAYSURF)
-            elif event.key == pygame.K_DOWN:
-                player1.staff_down(DISPLAYSURF)
+            dir = (
+                globals.Direction.UP
+                if event.key == pygame.K_UP
+                else globals.Direction.DOWN
+            )
+            player1.staff_movement(DISPLAYSURF, dir)
 
     # Display the player
     player1.draw(DISPLAYSURF)
 
     # Check for collisions
-    player1.check_collision()
+    # player1.check_collision()
+    check_collision()
 
     # Display and move the obstacles
     if random.randint(0, 1000) < 10:

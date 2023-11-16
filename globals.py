@@ -1,10 +1,11 @@
 # This file contains all the constant quantities used in the program
 import pygame
 import sys
+from enum import Enum
 
 from pygame.locals import *
 
-WIDTH = 800
+WIDTH = 1000
 HEIGHT = 450
 STAFFPOS = (75, 150, 225, 300, 375)
 FPS = 60
@@ -21,5 +22,11 @@ STAFFSOUNDS = (
 
 TOTAL_STAFFS = len(STAFFSOUNDS)
 TOTAL_NOTES = 6
+
+
+class Direction(Enum):
+    UP = -1
+    DOWN = 1
+
 
 obstacles_group = pygame.sprite.Group()
