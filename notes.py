@@ -33,6 +33,7 @@ class Note(pygame.sprite.Sprite):
         self.offset_y = offset_y
         self.rect = self.image.get_rect(center=(x + offset_x, y + offset_y))
         self.mask = pygame.mask.from_surface(self.image.convert_alpha())
+        self.orig_image = self.image.copy()
 
     def draw(self, surface):
         """
@@ -44,8 +45,6 @@ class Note(pygame.sprite.Sprite):
         surface.blit(self.image, self.rect)
 
 
-# [x]: Add a class for the player character which is inherited from Note class
-# TODO: Add player character convert feature
 class Player(Note):
     """
     Player Class as a type of Note (attributes inherited)
@@ -69,44 +68,45 @@ class Player(Note):
         """Set default position of the player class at third staff line in the beginning"""
         self.staff_loc = staff_loc
         super().__init__(image, x, globals.STAFFPOS[staff_loc], offset_x, offset_y)
-        colorImage = pygame.Surface(self.image.get_size()).convert_alpha()
-        colorImage.fill((134, 217, 119, 255))
-        self.image.blit(colorImage, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+        self.color_player()
+        self.hit_count = 0
 
-    # FIXME: Player chracter goes directly to last lines and then reports index out of range error
-    def staff_up(self, surface):
+    def color_player(self):
+        colorImage = pygame.Surface(self.orig_image.get_size()).convert_alpha()
+        colorImage.fill((134, 217, 119, 255))
+        final_image = self.orig_image.copy()
+        final_image.blit(colorImage, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+        self.image = final_image
+
+    def convert_to_obstacle(self, surface, obstacle: Note):
+        """
+        Convert the player sprite to that of the obstacle
+        """
+        pygame.draw.rect(surface, (0, 0, 0), self.rect)
+        self.image = obstacle.orig_image
+        self.orig_image = self.image
+        self.offset_x = obstacle.offset_x
+        self.offset_y = obstacle.offset_y
+        self.rect = self.image.get_rect(
+            center=(self.x + self.offset_x, self.y + self.offset_y)
+        )
+        self.mask = pygame.mask.from_surface(self.image.convert_alpha())
+        self.color_player()
+        self.draw(surface)
+
+    def staff_movement(self, surface, dir: globals.Direction):
         """
         Move to the staff line above
         """
-        if self.staff_loc == 0:
+        if self.staff_loc == 0 and dir == globals.Direction.UP:
+            return
+        elif self.staff_loc == 4 and dir == globals.Direction.DOWN:
             return
         pygame.draw.rect(surface, (0, 0, 0), self.rect)
         prev_y = globals.STAFFPOS[self.staff_loc]
-        self.staff_loc -= 1
+        self.staff_loc += dir.value
         new_y = globals.STAFFPOS[self.staff_loc]
+        self.y = new_y
         self.rect.move_ip(0, new_y - prev_y)
         pygame.mixer.Sound.play(globals.STAFFSOUNDS[4 - self.staff_loc])
         self.draw(surface)
-
-    def staff_down(self, surface):
-        """
-        Move to the staff line below
-        """
-        if self.staff_loc == 4:
-            return
-        pygame.draw.rect(surface, (0, 0, 0), self.rect)
-        prev_y = globals.STAFFPOS[self.staff_loc]
-        self.staff_loc += 1
-        new_y = globals.STAFFPOS[self.staff_loc]
-        self.rect.move_ip(0, new_y - prev_y)
-        pygame.mixer.Sound.play(globals.STAFFSOUNDS[4 - self.staff_loc])
-        self.draw(surface)
-
-    def check_collision(self):
-        hits = pygame.sprite.spritecollide(
-            self, globals.obstacles_group, False, collided=pygame.sprite.collide_mask
-        )
-        if hits:
-            print("Collision detected: " + str(hits[0]))
-            pygame.quit()
-            sys.exit()
