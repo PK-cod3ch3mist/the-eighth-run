@@ -70,6 +70,7 @@ class Player(Note):
         super().__init__(image, x, globals.STAFFPOS[staff_loc], offset_x, offset_y)
         self.color_player()
         self.hit_count = 0
+        self.score = 0
 
     def color_player(self):
         colorImage = pygame.Surface(self.orig_image.get_size()).convert_alpha()

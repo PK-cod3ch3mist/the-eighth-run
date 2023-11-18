@@ -121,6 +121,11 @@ while True:  # main game loop
         hit_count_text, hit_count_text_rect = hits_text(player.hit_count)
         DISPLAYSURF.blit(hit_count_text, hit_count_text_rect)
 
+        score_text, score_text_rect = scores_text(player.score)
+        pygame.draw.rect(DISPLAYSURF, (0, 0, 0), (globals.WIDTH - 200, 50, 200, 50))
+        DISPLAYSURF.blit(score_text, score_text_rect)
+        player.score += 0.01
+
         # Display and move the obstacles
         if random.randint(0, 1000) < 10:
             game_obstacles.add_obstacle()

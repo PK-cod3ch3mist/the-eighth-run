@@ -19,19 +19,21 @@ game_font_obj = pygame.font.Font(game_font_path, game_font_size)
 display_splash = True
 
 
-def hits_text(hit_count):
+def hits_text(hit_count: int):
     hit_count_text = game_font_obj.render(
-        "Hits left: " + str(3 - hit_count), True, (255, 255, 255)
+        "Hits left: " + "x " * (3 - hit_count), True, (255, 255, 255)
     ).convert_alpha()
-    hit_count_text_rect = hit_count_text.get_rect(center=(100, 75))
+    hit_count_text_rect = hit_count_text.get_rect()
+    hit_count_text_rect.center = (hit_count_text_rect.width / 2 + 10, 75)
     return (hit_count_text, hit_count_text_rect)
 
 
-def score_text(score):
+def scores_text(score: int):
     score_text = game_font_obj.render(
-        "Score: " + str(score), True, (255, 255, 255)
+        "Score: " + str(int(score)), True, (255, 255, 255)
     ).convert_alpha()
-    score_text_rect = score_text.get_rect(center=(globals.WIDTH - 100, 100))
+    score_text_rect = score_text.get_rect()
+    score_text_rect.center = (globals.WIDTH - score_text_rect.width / 2 - 10, 75)
     return (score_text, score_text_rect)
 
 
