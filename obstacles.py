@@ -52,15 +52,15 @@ class Obstacle(notes.Note):
         colorImage.fill((255, 100, 100, 255))
         self.image.blit(colorImage, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
-    def move_left(self, surface):
+    def move_left(self, surface, speed=1):
         """
         Move the obstacle across the screen
         """
         # draw a black rect over the obstacle's previous position
         pygame.draw.rect(surface, (0, 0, 0), self.rect)
         # move the obstacle left by 1 pixel
-        self.x -= 1
-        self.rect.move_ip(-1, 0)
+        self.x -= speed
+        self.rect.move_ip(-speed, 0)
         # draw the obstacle at its new position
         self.draw(surface)
 
@@ -93,6 +93,7 @@ class ObstacleList:
         """
         self.obstacles = []
         self.rightmost_occupied_px = [0, 0, 0, 0, 0]
+        self.speed = 1
 
     def add_obstacle(self):
         """
@@ -130,7 +131,7 @@ class ObstacleList:
         Move all obstacles in the list, while updating the occupied staff lines
         """
         for obstacle in self.obstacles:
-            obstacle.move_left(surface)
+            obstacle.move_left(surface, self.speed)
             w = obstacle.rect.width
             if obstacle.x + obstacle.offset_x + w / 2 < 0:
                 self.remove_obstacle(obstacle)

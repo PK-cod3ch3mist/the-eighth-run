@@ -122,12 +122,29 @@ while True:  # main game loop
         DISPLAYSURF.blit(hit_count_text, hit_count_text_rect)
 
         score_text, score_text_rect = scores_text(player.score)
-        pygame.draw.rect(DISPLAYSURF, (0, 0, 0), (globals.WIDTH - 200, 50, 200, 50))
         DISPLAYSURF.blit(score_text, score_text_rect)
+        prev_score = player.score
         player.score += 0.01
 
+        # Remove the score from the screen if it changes
+        if int(prev_score) != int(player.score):
+            pygame.draw.rect(DISPLAYSURF, (0, 0, 0), (globals.WIDTH - 200, 50, 200, 50))
+
+        # Increase the speed of the obstacles every 15 points
+        if int(prev_score / globals.SPEED_LEVEL) != int(
+            player.score / globals.SPEED_LEVEL
+        ):
+            game_obstacles.speed += 1
+
+        # Increase the probability of adding an obstacle every 30 points
+        if int(prev_score / globals.PROB_LEVEL) != int(
+            player.score / globals.PROB_LEVEL
+        ):
+            globals.probability += 1
+
         # Display and move the obstacles
-        if random.randint(0, 1000) < 10:
+        # Starting probability of adding an obstacle is 10 / 1000
+        if random.randint(0, 1000) < globals.probability:
             game_obstacles.add_obstacle()
         game_obstacles.move_obstacles(DISPLAYSURF)
 

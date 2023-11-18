@@ -10,6 +10,11 @@ HEIGHT = 750
 STAFFPOS = (175, 275, 375, 475, 575)
 FPS = 60
 
+probability = 10
+
+SPEED_LEVEL = 15
+PROB_LEVEL = 30
+
 # Staff change sounds
 pygame.mixer.init()
 STAFFSOUNDS = (
