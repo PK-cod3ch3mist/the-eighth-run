@@ -130,13 +130,13 @@ while True:  # main game loop
         if int(prev_score) != int(player.score):
             pygame.draw.rect(DISPLAYSURF, (0, 0, 0), (globals.WIDTH - 200, 50, 200, 50))
 
-        # Increase the speed of the obstacles every 15 points
+        # Increase the speed of the obstacles every SPEED_LEVEL points
         if int(prev_score / globals.SPEED_LEVEL) != int(
             player.score / globals.SPEED_LEVEL
         ):
             game_obstacles.speed += 1
 
-        # Increase the probability of adding an obstacle every 30 points
+        # Increase the probability of adding an obstacle every PROB_LEVEL points
         if int(prev_score / globals.PROB_LEVEL) != int(
             player.score / globals.PROB_LEVEL
         ):

@@ -12,11 +12,14 @@ FPS = 60
 
 probability = 10
 
+# FIXME: Determine the best values for these constants
 SPEED_LEVEL = 15
 PROB_LEVEL = 30
 
 # Staff change sounds
 pygame.mixer.init()
+
+# TODO: Change these sounds to be more vintage like
 STAFFSOUNDS = (
     pygame.mixer.Sound("assets/sounds/E3.wav"),
     pygame.mixer.Sound("assets/sounds/G3.wav"),
