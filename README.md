@@ -7,8 +7,9 @@ You are in control of a note, escape the hordes of musical notes coming at you a
 
 ## Features
 
-- [ ] Basic gameplay
+- [x] Basic gameplay
 - [x] Conversion of player to enemy when encountered
 - [ ] Powerups
-- [ ] Text stats
-- [ ] Splash screen
+- [x] Text stats
+- [x] Splash screen
+- [ ] Music
