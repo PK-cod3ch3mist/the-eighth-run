@@ -73,7 +73,7 @@ class Player(Note):
 
     def color_player(self):
         colorImage = pygame.Surface(self.orig_image.get_size()).convert_alpha()
-        colorImage.fill((134, 217, 119, 255))
+        colorImage.fill((100, 255, 100, 255))
         final_image = self.orig_image.copy()
         final_image.blit(colorImage, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
         self.image = final_image
@@ -101,6 +101,8 @@ class Player(Note):
         if self.staff_loc == 0 and dir == globals.Direction.UP:
             return
         elif self.staff_loc == 4 and dir == globals.Direction.DOWN:
+            return
+        elif dir == None:
             return
         pygame.draw.rect(surface, (0, 0, 0), self.rect)
         prev_y = globals.STAFFPOS[self.staff_loc]

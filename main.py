@@ -8,6 +8,7 @@ import obstacles
 import logging
 
 from pygame.locals import *
+from textcontent import *
 
 # Basic pygame boilerplate code with event loop
 pygame.init()
@@ -16,9 +17,11 @@ pygame.display.set_caption("The Eighth Run")
 
 FramePerSec = pygame.time.Clock()
 
+# Setup player and obstacles
 game_obstacles = obstacles.ObstacleList()
-player1 = notes.Player()
+player = notes.Player()
 
+# Setup logging
 logging.basicConfig(
     filename="./gamelog.log",
     format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
@@ -29,16 +32,25 @@ logging.basicConfig(
 logger = logging.getLogger("main")
 
 
+BLINK_EVENT = pygame.USEREVENT + 1
+show_prompt = True
+pygame.time.set_timer(BLINK_EVENT, 500)
+
+
 def check_collision():
+    """
+    Check for collisions between the player and obstacles. If there is a collision, convert the player sprite to that of the obstacle. After 3 collisions, the game ends.
+    """
     hits = pygame.sprite.spritecollide(
-        player1, globals.obstacles_group, False, collided=pygame.sprite.collide_mask
+        player, globals.obstacles_group, False, collided=pygame.sprite.collide_mask
     )
     if hits:
         logger.info("Collision detected:")
-        if player1.hit_count < 3:
+        pygame.draw.rect(DISPLAYSURF, (0, 0, 0), (0, 50, globals.WIDTH, 50))
+        if player.hit_count < 3:
             # Increase hit count and display it
-            player1.hit_count += 1
-            logger.debug("Hit count: " + str(player1.hit_count))
+            player.hit_count += 1
+            logger.debug("Hit count: " + str(player.hit_count))
 
             # Remove the obstacles from the list
             for obj in hits:
@@ -46,7 +58,7 @@ def check_collision():
                 obj.hide_obstacle(DISPLAYSURF)
 
             # Convert the player sprite to that of the obstacle
-            player1.convert_to_obstacle(DISPLAYSURF, hits[0])
+            player.convert_to_obstacle(DISPLAYSURF, hits[0])
         else:
             logger.debug("Game over")
             pygame.quit()
@@ -59,35 +71,71 @@ while True:  # main game loop
             pygame.quit()
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            dir = (
-                globals.Direction.UP
-                if event.key == pygame.K_UP
-                else globals.Direction.DOWN
+            if display_splash:
+                display_splash = False
+
+                # Hide the splash screen
+                pygame.draw.rect(
+                    DISPLAYSURF, (0, 0, 0), (0, 0, globals.WIDTH, globals.HEIGHT)
+                )
+                continue
+
+            if event.key == pygame.K_UP:
+                dir = globals.Direction.UP
+            elif event.key == pygame.K_DOWN:
+                dir = globals.Direction.DOWN
+            else:
+                dir = None
+
+            player.staff_movement(DISPLAYSURF, dir)
+        elif event.type == BLINK_EVENT:
+            show_prompt = not show_prompt
+
+    if display_splash:
+        # Display splash screen
+        (
+            (splash_text, splash_text_rect),
+            info_lines,
+            (prompt_text, prompt_text_rect),
+        ) = setup_splash_screen()
+        DISPLAYSURF.blit(splash_text, splash_text_rect)
+        if show_prompt:
+            DISPLAYSURF.blit(prompt_text, prompt_text_rect)
+        else:
+            pygame.draw.rect(
+                DISPLAYSURF, (0, 0, 0), (0, 600, globals.WIDTH, globals.HEIGHT - 100)
             )
-            player1.staff_movement(DISPLAYSURF, dir)
 
-    # Display the player
-    player1.draw(DISPLAYSURF)
+        for info_line in info_lines:
+            DISPLAYSURF.blit(info_line[0], info_line[1])
 
-    # Check for collisions
-    # player1.check_collision()
-    check_collision()
+    else:
+        # Display the player
+        player.draw(DISPLAYSURF)
 
-    # Display and move the obstacles
-    if random.randint(0, 1000) < 10:
-        game_obstacles.add_obstacle()
-    game_obstacles.move_obstacles(DISPLAYSURF)
+        # Check for collisions
+        # player.check_collision()
+        check_collision()
 
-    # Display the 5 staff lines at equal intervals in the y direction
-    staff_lines = [
-        platforms.Staff(globals.STAFFPOS[0]),
-        platforms.Staff(globals.STAFFPOS[1]),
-        platforms.Staff(globals.STAFFPOS[2]),
-        platforms.Staff(globals.STAFFPOS[3]),
-        platforms.Staff(globals.STAFFPOS[4]),
-    ]
-    for staff_line in staff_lines:
-        staff_line.draw(DISPLAYSURF)
+        # Display the hit count
+        hit_count_text, hit_count_text_rect = hits_text(player.hit_count)
+        DISPLAYSURF.blit(hit_count_text, hit_count_text_rect)
+
+        # Display and move the obstacles
+        if random.randint(0, 1000) < 10:
+            game_obstacles.add_obstacle()
+        game_obstacles.move_obstacles(DISPLAYSURF)
+
+        # Display the 5 staff lines at equal intervals in the y direction
+        staff_lines = [
+            platforms.Staff(globals.STAFFPOS[0]),
+            platforms.Staff(globals.STAFFPOS[1]),
+            platforms.Staff(globals.STAFFPOS[2]),
+            platforms.Staff(globals.STAFFPOS[3]),
+            platforms.Staff(globals.STAFFPOS[4]),
+        ]
+        for staff_line in staff_lines:
+            staff_line.draw(DISPLAYSURF)
 
     pygame.display.update()
     FramePerSec.tick(globals.FPS)

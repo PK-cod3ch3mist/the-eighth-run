@@ -49,7 +49,7 @@ class Obstacle(notes.Note):
         image = pygame.image.load(image)
         super().__init__(image, x, globals.STAFFPOS[staff_loc], offset_x, offset_y)
         colorImage = pygame.Surface(self.orig_image.get_size()).convert_alpha()
-        colorImage.fill((245, 123, 86, 255))
+        colorImage.fill((255, 100, 100, 255))
         self.image.blit(colorImage, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
     def move_left(self, surface):
