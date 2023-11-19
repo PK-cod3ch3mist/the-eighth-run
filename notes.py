@@ -7,7 +7,7 @@ from pygame.locals import *
 
 class Note(pygame.sprite.Sprite):
     """
-    Class for a pygame sprite that will later serve as base class to Player and Obstacles
+    Class for a pygame sprite that will later serve as base class to Player, Obstacles and Powerups
 
     Attributes:
         image   : pygame.Surface object
