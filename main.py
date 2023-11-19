@@ -6,6 +6,8 @@ import platforms
 import globals
 import obstacles
 import logging
+import movinglist
+import powerups
 
 from pygame.locals import *
 from textcontent import *
@@ -18,7 +20,7 @@ pygame.display.set_caption("The Eighth Run")
 FramePerSec = pygame.time.Clock()
 
 # Setup player and obstacles
-game_obstacles = obstacles.ObstacleList()
+game_objects = movinglist.MovingList()
 player = notes.Player()
 
 # Setup logging
@@ -42,27 +44,49 @@ def check_collision():
     Check for collisions between the player and obstacles. If there is a collision, convert the player sprite to that of the obstacle. After 3 collisions, the game ends.
     """
     hits = pygame.sprite.spritecollide(
-        player, globals.obstacles_group, False, collided=pygame.sprite.collide_mask
+        player, globals.moving_group, False, collided=pygame.sprite.collide_mask
     )
     if hits:
-        logger.info("Collision detected:")
-        pygame.draw.rect(DISPLAYSURF, (0, 0, 0), (0, 50, globals.WIDTH, 50))
-        if player.hit_count < 3:
-            # Increase hit count and display it
-            player.hit_count += 1
-            logger.debug("Hit count: " + str(player.hit_count))
+        # check if the player is colliding with an obstacle
+        if isinstance(hits[0], obstacles.Obstacle):
+            logger.info("Collision detected with obstacle.")
+            pygame.draw.rect(DISPLAYSURF, (0, 0, 0), (0, 50, globals.WIDTH, 50))
+            if player.hit_count < 3:
+                # Increase hit count and display it
+                player.hit_count += 1
+                logger.debug("Hit count: " + str(player.hit_count))
 
-            # Remove the obstacles from the list
+                # Remove the obstacles from the list
+                for obj in hits:
+                    game_objects.remove_object(obj)
+                    obj.hide(DISPLAYSURF)
+
+                # Convert the player sprite to that of the obstacle
+                player.convert_to_obstacle(DISPLAYSURF, hits[0])
+            else:
+                logger.debug("Game over")
+                pygame.quit()
+                sys.exit()
+
+        # check if the player is colliding with a powerup
+        elif isinstance(hits[0], powerups.Powerup):
+            logger.info("Collision detected with powerup.")
+            # Remove the powerup from the list
             for obj in hits:
-                game_obstacles.remove_obstacle(obj)
-                obj.hide_obstacle(DISPLAYSURF)
+                game_objects.remove_object(obj)
+                obj.hide(DISPLAYSURF)
 
-            # Convert the player sprite to that of the obstacle
-            player.convert_to_obstacle(DISPLAYSURF, hits[0])
-        else:
-            logger.debug("Game over")
-            pygame.quit()
-            sys.exit()
+            # If powerup of type 0, increase the hit count
+            if hits[0].powerup_type == 0 and player.hit_count > 0:
+                player.hit_count -= 1
+                pygame.draw.rect(DISPLAYSURF, (0, 0, 0), (0, 50, globals.WIDTH, 50))
+                logger.debug("New hit count: " + str(player.hit_count))
+
+            # If powerup of type 1, increase the score
+            elif hits[0].powerup_type == 1:
+                player.prev_score = player.score
+                player.score += 10
+                logger.debug("New score: " + str(player.score))
 
 
 while True:  # main game loop
@@ -123,30 +147,37 @@ while True:  # main game loop
 
         score_text, score_text_rect = scores_text(player.score)
         DISPLAYSURF.blit(score_text, score_text_rect)
-        prev_score = player.score
-        player.score += 0.01
 
         # Remove the score from the screen if it changes
-        if int(prev_score) != int(player.score):
+        if int(player.prev_score) != int(player.score):
             pygame.draw.rect(DISPLAYSURF, (0, 0, 0), (globals.WIDTH - 200, 50, 200, 50))
 
         # Increase the speed of the obstacles every SPEED_LEVEL points
-        if int(prev_score / globals.SPEED_LEVEL) != int(
+        if int(player.prev_score / globals.SPEED_LEVEL) != int(
             player.score / globals.SPEED_LEVEL
         ):
-            game_obstacles.speed += 1
+            game_objects.speed += 1
+            globals.obstacle_probability += 1
 
         # Increase the probability of adding an obstacle every PROB_LEVEL points
-        if int(prev_score / globals.PROB_LEVEL) != int(
+        if int(player.prev_score / globals.PROB_LEVEL) != int(
             player.score / globals.PROB_LEVEL
         ):
-            globals.probability += 1
+            globals.obstacle_probability += 5
 
         # Display and move the obstacles
-        # Starting probability of adding an obstacle is 10 / 1000
-        if random.randint(0, 1000) < globals.probability:
-            game_obstacles.add_obstacle()
-        game_obstacles.move_obstacles(DISPLAYSURF)
+        # Starting probability of adding an obstacle is 10%
+        if random.randint(0, 100) < globals.obstacle_probability:
+            game_objects.add_obstacle()
+
+        # Starting probability of adding a powerup is 1%
+        if random.randint(0, 100) < globals.powerup_probability:
+            game_objects.add_powerup()
+
+        game_objects.move_objects(DISPLAYSURF)
+
+        player.prev_score = player.score
+        player.score += 0.01
 
         # Display the 5 staff lines at equal intervals in the y direction
         staff_lines = [

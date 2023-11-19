@@ -71,6 +71,7 @@ class Player(Note):
         self.color_player()
         self.hit_count = 0
         self.score = 0
+        self.prev_score = 0
 
     def color_player(self):
         colorImage = pygame.Surface(self.orig_image.get_size()).convert_alpha()
