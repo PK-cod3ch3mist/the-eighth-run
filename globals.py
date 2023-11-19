@@ -10,11 +10,14 @@ HEIGHT = 750
 STAFFPOS = (175, 275, 375, 475, 575)
 FPS = 60
 
-probability = 10
+obstacle_probability = 10
+powerup_probability = 1
 
 # FIXME: Determine the best values for these constants
 SPEED_LEVEL = 15
 PROB_LEVEL = 30
+START_SPEED = 2
+BLANK_SPACE = 200
 
 # Staff change sounds
 pygame.mixer.init()
@@ -30,6 +33,7 @@ STAFFSOUNDS = (
 
 TOTAL_STAFFS = len(STAFFSOUNDS)
 TOTAL_NOTES = 6
+TOTAL_POWERUPS = 2
 
 
 class Direction(Enum):
@@ -37,4 +41,4 @@ class Direction(Enum):
     DOWN = 1
 
 
-obstacles_group = pygame.sprite.Group()
+moving_group = pygame.sprite.Group()

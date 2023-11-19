@@ -17,6 +17,7 @@ class Obstacle(notes.Note):
 
     Methods:
         move_left() : moves obstacles across the screen
+        hide()      : hides the obstacle by drawing a black rectangle over it
     """
 
     def __init__(
@@ -64,83 +65,8 @@ class Obstacle(notes.Note):
         # draw the obstacle at its new position
         self.draw(surface)
 
-    def hide_obstacle(self, surface):
+    def hide(self, surface):
         """
         Hide the obstacle
         """
         pygame.draw.rect(surface, (0, 0, 0), self.rect)
-
-
-class ObstacleList:
-    """
-    Class for a list of obstacles
-
-    Attributes:
-        obstacles   : list of Obstacle objects
-        rightmost_occupied_px: list of int (rightmost pixel occupied by an obstacle on each staff line)
-
-    Methods:
-        add_obstacle()  : adds an obstacle to the list
-        remove_obstacle(): removes an obstacle from the list
-        move_obstacles() : moves all obstacles in the list
-    """
-
-    RIGHT_LIMIT = globals.WIDTH / 2
-
-    def __init__(self):
-        """
-        Initialize an empty list of obstacles
-        """
-        self.obstacles = []
-        self.rightmost_occupied_px = [0, 0, 0, 0, 0]
-        self.speed = 1
-
-    def add_obstacle(self):
-        """
-        Add an obstacle to the list to an empty position on the staff
-        """
-        # if no staff line has righmost pixel as zero, that means all staff lines are occupied, so return False
-        if all(x != 0 for x in self.rightmost_occupied_px):
-            return False
-
-        # randomly generate a number
-        n_type = random.randint(0, globals.TOTAL_NOTES - 1)
-        # randomly generate a staff location
-        while True:
-            s_loc = random.randint(0, globals.TOTAL_STAFFS - 1)
-            if self.rightmost_occupied_px[s_loc] == 0:
-                break
-
-        obstacle = Obstacle(note_type=n_type, staff_loc=s_loc)
-        # print("Adding obstacle at staff line", s_loc)
-        self.obstacles.append(obstacle)
-        globals.obstacles_group.add(obstacle)
-        self.rightmost_occupied_px[s_loc] = obstacle.x + obstacle.rect.width / 2
-
-        return True
-
-    def remove_obstacle(self, obstacle):
-        """
-        Remove an obstacle from the list
-        """
-        self.obstacles.remove(obstacle)
-        globals.obstacles_group.remove(obstacle)
-
-    def move_obstacles(self, surface):
-        """
-        Move all obstacles in the list, while updating the occupied staff lines
-        """
-        for obstacle in self.obstacles:
-            obstacle.move_left(surface, self.speed)
-            w = obstacle.rect.width
-            if obstacle.x + obstacle.offset_x + w / 2 < 0:
-                self.remove_obstacle(obstacle)
-
-        for i in range(0, 5):
-            if self.rightmost_occupied_px[i] != 0:
-                self.rightmost_occupied_px[i] -= 1
-            if (
-                self.rightmost_occupied_px[i] < self.RIGHT_LIMIT
-                and self.rightmost_occupied_px[i] != 0
-            ):
-                self.rightmost_occupied_px[i] = 0

@@ -22,10 +22,10 @@ class Powerup(notes.Note):
     Methods:
         color_powerup(): colors the powerup blue
         move_left()    : moves powerups across the screen
-        hide_powerup() : hides the powerup by drawing a black rectangle over it
+        hide()         : hides the powerup by drawing a black rectangle over it
     """
 
-    def __init__(self, powerup_type, x=globals.WIDTH - 20, offset_x=0):
+    def __init__(self, powerup_type, x=globals.WIDTH - 20, offset_x=0, offset_y=0):
         """
         Assign a powerup based upon a powerup_type argument provided.
         This is done so we can randomly generate powerups later on in the game
@@ -38,7 +38,7 @@ class Powerup(notes.Note):
             self.staff_loc = 1
         elif powerup_type == 1:
             image += "half-rest.png"
-            self.offset_y = -7
+            offset_y = -7
             self.staff_loc = 2
 
         image = pygame.image.load(image)
@@ -67,7 +67,7 @@ class Powerup(notes.Note):
         # draw the powerup in its new position
         self.draw(surface)
 
-    def hide_powerup(self, surface):
+    def hide(self, surface):
         """
         Hide the powerup by drawing a black rectangle over it
         """
