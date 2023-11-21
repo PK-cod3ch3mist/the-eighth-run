@@ -16,4 +16,4 @@ You are in control of a note, escape the hordes of musical notes coming at you a
 
 ## But I like retro/8-bit aesthetic
 
-I was actually in a dilemma whether to go the retro or jazz way, so I did both! Checkout the retro branch of this game to view the retro aesthetic.
+I was actually in a dilemma whether to go the retro or jazz way, so I am doing both! Checkout the retro branch of this game to view the retro aesthetic.
