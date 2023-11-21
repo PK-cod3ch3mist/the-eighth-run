@@ -13,3 +13,7 @@ You are in control of a note, escape the hordes of musical notes coming at you a
 - [x] Text stats
 - [x] Splash screen
 - [ ] Music
+
+## But I like a jazz lo-fi aesthetic
+
+I was actually in a dilemma whether to go the retro or jazz way, so I did both! Checkout the main branch of this game to view the jazz lo-fi aesthetic.
