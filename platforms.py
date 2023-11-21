@@ -15,7 +15,7 @@ class Staff:
     This will create a rectangular line accross the screen at a certain y value.
     """
 
-    THICKNESS = 5
+    THICKNESS = 4
 
     def __init__(self, y):
         """

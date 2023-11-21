@@ -12,11 +12,18 @@ title_font_obj = pygame.font.Font(title_font_path, title_font_size)
 
 # Setup font for in game text
 game_font_path = "./assets/fonts/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf"
-game_font_size = 28
+game_font_size = 30
 game_font_obj = pygame.font.Font(game_font_path, game_font_size)
 
-# Splash screen display boolean
-display_splash = True
+
+def game_over_func():
+    game_over_text = title_font_obj.render(
+        "Game Over", True, (255, 100, 100)
+    ).convert_alpha()
+    game_over_text_rect = game_over_text.get_rect(
+        center=(globals.WIDTH / 2, globals.HEIGHT - 100)
+    )
+    return (game_over_text, game_over_text_rect)
 
 
 def hits_text(hit_count: int):

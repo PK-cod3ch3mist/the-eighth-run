@@ -38,6 +38,12 @@ BLINK_EVENT = pygame.USEREVENT + 1
 show_prompt = True
 pygame.time.set_timer(BLINK_EVENT, 500)
 
+# Splash screen display boolean
+display_splash = True
+
+# Game over display boolean
+game_over = False
+
 
 def check_collision():
     """
@@ -65,8 +71,8 @@ def check_collision():
                 player.convert_to_obstacle(DISPLAYSURF, hits[0])
             else:
                 logger.debug("Game over")
-                pygame.quit()
-                sys.exit()
+                global game_over
+                game_over = True
 
         # check if the player is colliding with a powerup
         elif isinstance(hits[0], powerups.Powerup):
@@ -154,6 +160,11 @@ while True:  # main game loop
 
         for info_line in info_lines:
             DISPLAYSURF.blit(info_line[0], info_line[1])
+
+    elif game_over:
+        # Display game over screen
+        game_over_text, game_over_text_rect = game_over_func()
+        DISPLAYSURF.blit(game_over_text, game_over_text_rect)
 
     else:
         # Display the player

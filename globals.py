@@ -16,15 +16,15 @@ blank_space = 500
 
 # FIXME: Determine the best values for these constants
 
-PROB_LEVEL = 50
+PROB_LEVEL = 30
 PROB_INCREASE = 0.05
 
-SPACE_LEVEL = 100
+SPACE_LEVEL = 60
 MIN_BLANK_SPACE = 300
 SPACE_DECREASE = 5
 
 START_SPEED = 2
-SPEED_LEVEL = 25
+SPEED_LEVEL = 15
 SPEED_INCREASE = 1
 
 
@@ -33,9 +33,9 @@ pygame.mixer.init()
 
 # TODO: Change these sounds to be more vintage like
 STAFFSOUNDS = (
-    pygame.mixer.Sound("assets/sounds/E3.wav"),
+    pygame.mixer.Sound("assets/sounds/D#3.wav"),
     pygame.mixer.Sound("assets/sounds/G3.wav"),
-    pygame.mixer.Sound("assets/sounds/B3.wav"),
+    pygame.mixer.Sound("assets/sounds/A#3.wav"),
     pygame.mixer.Sound("assets/sounds/D4.wav"),
     pygame.mixer.Sound("assets/sounds/F4.wav"),
 )
