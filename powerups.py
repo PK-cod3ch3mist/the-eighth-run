@@ -42,7 +42,9 @@ class Powerup(notes.Note):
             self.staff_loc = 2
 
         image = pygame.image.load(image)
-        super().__init__(image, x, globals.STAFFPOS[self.staff_loc], offset_x, offset_y)
+        super().__init__(
+            image, x, globals.STAFFPOS[self.staff_loc], offset_x, offset_y, height=15
+        )
         self.color_powerup()
 
     def color_powerup(self):
