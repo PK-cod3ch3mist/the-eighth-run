@@ -89,6 +89,28 @@ def check_collision():
                 logger.debug("New score: " + str(player.score))
 
 
+def difficulty_increase():
+    # Increase the speed of the obstacles every SPEED_LEVEL points
+    if int(player.prev_score / globals.SPEED_LEVEL) != int(
+        player.score / globals.SPEED_LEVEL
+    ):
+        game_objects.speed += globals.SPEED_INCREASE
+
+    # Increase the probability of adding an obstacle every PROB_LEVEL points
+    if int(player.prev_score / globals.PROB_LEVEL) != int(
+        player.score / globals.PROB_LEVEL
+    ):
+        globals.obstacle_probability += globals.PROB_INCREASE
+
+    # Decrease the blank space between obstacles every SPACE_LEVEL points
+    if (
+        int(player.prev_score / globals.SPACE_LEVEL)
+        != int(player.score / globals.SPACE_LEVEL)
+        and globals.blank_space > globals.MIN_BLANK_SPACE
+    ):
+        globals.blank_space -= globals.SPACE_DECREASE
+
+
 while True:  # main game loop
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -152,26 +174,16 @@ while True:  # main game loop
         if int(player.prev_score) != int(player.score):
             pygame.draw.rect(DISPLAYSURF, (0, 0, 0), (globals.WIDTH - 200, 50, 200, 50))
 
-        # Increase the speed of the obstacles every SPEED_LEVEL points
-        if int(player.prev_score / globals.SPEED_LEVEL) != int(
-            player.score / globals.SPEED_LEVEL
-        ):
-            game_objects.speed += 1
-            globals.obstacle_probability += 1
-
-        # Increase the probability of adding an obstacle every PROB_LEVEL points
-        if int(player.prev_score / globals.PROB_LEVEL) != int(
-            player.score / globals.PROB_LEVEL
-        ):
-            globals.obstacle_probability += 5
+        # Increase the difficulty
+        difficulty_increase()
 
         # Display and move the obstacles
         # Starting probability of adding an obstacle is 10%
-        if random.randint(0, 100) < globals.obstacle_probability:
+        if random.random() < globals.obstacle_probability:
             game_objects.add_obstacle()
 
         # Starting probability of adding a powerup is 1%
-        if random.randint(0, 100) < globals.powerup_probability:
+        if random.random() < globals.powerup_probability:
             game_objects.add_powerup()
 
         game_objects.move_objects(DISPLAYSURF)

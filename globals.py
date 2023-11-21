@@ -10,14 +10,23 @@ HEIGHT = 750
 STAFFPOS = (175, 275, 375, 475, 575)
 FPS = 60
 
-obstacle_probability = 10
-powerup_probability = 1
+obstacle_probability = 0.1
+powerup_probability = 0.01
+blank_space = 500
 
 # FIXME: Determine the best values for these constants
-SPEED_LEVEL = 15
-PROB_LEVEL = 30
+
+PROB_LEVEL = 50
+PROB_INCREASE = 0.05
+
+SPACE_LEVEL = 100
+MIN_BLANK_SPACE = 300
+SPACE_DECREASE = 5
+
 START_SPEED = 2
-BLANK_SPACE = 200
+SPEED_LEVEL = 25
+SPEED_INCREASE = 1
+
 
 # Staff change sounds
 pygame.mixer.init()

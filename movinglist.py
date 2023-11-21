@@ -24,7 +24,7 @@ class MovingList:
         move_objects() : moves all objects in the list
     """
 
-    RIGHT_LIMIT = globals.WIDTH - globals.BLANK_SPACE
+    RIGHT_LIMIT = globals.WIDTH - globals.blank_space
 
     def __init__(self):
         """
@@ -101,7 +101,7 @@ class MovingList:
 
         for i in range(0, 5):
             if self.rightmost_occupied_px[i] != 0:
-                self.rightmost_occupied_px[i] -= 1
+                self.rightmost_occupied_px[i] -= self.speed
             if (
                 self.rightmost_occupied_px[i] < self.RIGHT_LIMIT
                 and self.rightmost_occupied_px[i] != 0
