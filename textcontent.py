@@ -16,6 +16,7 @@ game_font_size = 30
 game_font_obj = pygame.font.Font(game_font_path, game_font_size)
 
 
+# TODO: Build a better game over screen with credits and stuff
 def game_over_func():
     game_over_text = title_font_obj.render(
         "Game Over", True, (255, 100, 100)
