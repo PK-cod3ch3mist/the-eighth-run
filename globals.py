@@ -14,8 +14,6 @@ obstacle_probability = 0.1
 powerup_probability = 0.01
 blank_space = 500
 
-# FIXME: Determine the best values for these constants
-
 PROB_LEVEL = 30
 PROB_INCREASE = 0.05
 
@@ -31,7 +29,6 @@ SPEED_INCREASE = 1
 # Staff change sounds
 pygame.mixer.init()
 
-# TODO: Change these sounds to be more vintage like
 STAFFSOUNDS = (
     pygame.mixer.Sound("assets/sounds/D#3.wav"),
     pygame.mixer.Sound("assets/sounds/G3.wav"),

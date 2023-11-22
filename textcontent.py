@@ -40,7 +40,6 @@ def general_text(
     return (text_obj, text_rect)
 
 
-# TODO: Build a better game over screen with credits and stuff
 def game_over_func(score: int):
     game_over_text, game_over_text_rect = general_text(
         "Game Over", globals.WIDTH / 2, globals.HEIGHT / 2 - 50, head_level=0

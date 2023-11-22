@@ -12,5 +12,5 @@ You are in control of a note, escape the hordes of musical notes coming at you a
 - [x] Powerups
 - [x] Text stats
 - [x] Splash screen
-- [ ] Music
+- [x] Music
 - [ ] Highscores
