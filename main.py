@@ -44,6 +44,10 @@ display_splash = True
 # Game over display boolean
 game_over = False
 
+# Load and play opening-track.wav music file
+pygame.mixer.music.load("./assets/music/opening-track.wav")
+pygame.mixer.music.play(loops=-1, fade_ms=500)
+
 
 def check_collision():
     """
@@ -74,6 +78,18 @@ def check_collision():
                 global game_over
                 game_over = True
 
+                # Change the music back to opening-track.wav
+                pygame.mixer.music.stop()
+                pygame.mixer.music.unload()
+                pygame.mixer.music.load("./assets/music/opening-track.wav")
+                pygame.mixer.music.play(loops=-1, fade_ms=500)
+
+                # Draw the screen black
+                pygame.draw.rect(
+                    DISPLAYSURF, (0, 0, 0), (0, 0, globals.WIDTH, globals.HEIGHT)
+                )
+                return True
+
         # check if the player is colliding with a powerup
         elif isinstance(hits[0], powerups.Powerup):
             logger.info("Collision detected with powerup.")
@@ -93,6 +109,8 @@ def check_collision():
                 player.prev_score = player.score
                 player.score += 10
                 logger.debug("New score: " + str(player.score))
+
+    return False
 
 
 def difficulty_increase():
@@ -130,6 +148,14 @@ while True:  # main game loop
                 pygame.draw.rect(
                     DISPLAYSURF, (0, 0, 0), (0, 0, globals.WIDTH, globals.HEIGHT)
                 )
+
+                # Stop the current music and unload it
+                pygame.mixer.music.stop()
+                pygame.mixer.music.unload()
+
+                # Load and play the start-beat.wav music file as game music
+                pygame.mixer.music.load("./assets/music/pace-beat.wav")
+                pygame.mixer.music.play(loops=-1, fade_ms=0)
                 continue
 
             if event.key == pygame.K_UP:
@@ -163,8 +189,9 @@ while True:  # main game loop
 
     elif game_over:
         # Display game over screen
-        game_over_text, game_over_text_rect = game_over_func()
-        DISPLAYSURF.blit(game_over_text, game_over_text_rect)
+        game_over_lines = game_over_func(player.score)
+        for line in game_over_lines:
+            DISPLAYSURF.blit(line[0], line[1])
 
     else:
         # Display the player
@@ -172,7 +199,9 @@ while True:  # main game loop
 
         # Check for collisions
         # player.check_collision()
-        check_collision()
+        is_game_over = check_collision()
+        if is_game_over:
+            continue
 
         # Display the hit count
         hit_count_text, hit_count_text_rect = hits_text(player.hit_count)
