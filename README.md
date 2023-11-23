@@ -13,4 +13,4 @@ You are in control of a note, escape the hordes of musical notes coming at you a
 - [x] Text stats
 - [x] Splash screen
 - [x] Music
-- [ ] Highscores
+- [x] Highscores
