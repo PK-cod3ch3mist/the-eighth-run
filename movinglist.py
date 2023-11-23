@@ -89,6 +89,16 @@ class MovingList:
         self.obj_list.remove(moving_object)
         globals.moving_group.remove(moving_object)
 
+    def reset(self):
+        """
+        Reset the list of moving objects
+        """
+        for moving_object in self.obj_list:
+            globals.moving_group.remove(moving_object)
+        self.obj_list = []
+        self.rightmost_occupied_px = [0, 0, 0, 0, 0]
+        self.speed = globals.START_SPEED
+
     def move_objects(self, surface):
         """
         Move all objects in the list, while updating the occupied staff lines

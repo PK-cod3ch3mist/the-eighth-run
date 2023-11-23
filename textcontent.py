@@ -40,18 +40,30 @@ def general_text(
     return (text_obj, text_rect)
 
 
-def game_over_func(score: int):
+def game_over_func(score: int, highscores: list):
     game_over_text, game_over_text_rect = general_text(
-        "Game Over", globals.WIDTH / 2, globals.HEIGHT / 2 - 50, head_level=0
+        "Game Over", globals.WIDTH / 2, 100, head_level=0
     )
     lines = [(game_over_text, game_over_text_rect)]
     lines.append(
         general_text(
             "Your Score: " + str(int(score)),
             pos_x=globals.WIDTH / 2,
-            pos_y=globals.HEIGHT / 2 + 100,
+            pos_y=200,
             l_align=0,
         )
+    )
+    lines.append(general_text("Highscores:", globals.WIDTH / 2, 250, head_level=1))
+    y_position = 300
+    num = 1
+    for s in highscores:
+        lines.append(
+            general_text(str(num) + ". " + str(s), globals.WIDTH / 2, y_position)
+        )
+        y_position += 50
+
+    prompt_text, prompt_text_rect = general_text(
+        "Press any key to restart", globals.WIDTH / 2, globals.HEIGHT - 100
     )
     # TODO: Add credits if any
     # lines.append(
@@ -62,7 +74,7 @@ def game_over_func(score: int):
     #         head_level=1,
     #     )
     # )
-    return lines
+    return (lines, (prompt_text, prompt_text_rect))
 
 
 def hits_text(hit_count: int):

@@ -23,12 +23,13 @@ FramePerSec = pygame.time.Clock()
 game_objects = movinglist.MovingList()
 player = notes.Player()
 
-# Setup logging
+# Setup logging with overwrite mode
 logging.basicConfig(
     filename="./gamelog.log",
     format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
     datefmt="%H:%M:%S",
     level=logging.DEBUG,
+    filemode="w",
 )
 
 logger = logging.getLogger("main")
@@ -47,6 +48,34 @@ game_over = False
 # Load and play opening-track.wav music file
 pygame.mixer.music.load("./assets/music/opening-track.wav")
 pygame.mixer.music.play(loops=-1, fade_ms=500)
+
+
+def read_from_file():
+    # open the highscores file
+    highscores_file = open("./assets/scores/highscores.txt", "r+")
+    # read the scores into a list
+    highscores = highscores_file.readlines()
+    # close the file
+    highscores_file.close()
+    # convert the scores to integers
+    highscores = [int(float(s)) for s in highscores]
+    return highscores
+
+
+def write_to_file(score: int):
+    highscores = read_from_file()
+    if len(highscores) < 3 or score > min(highscores):
+        # if list is empty or the player's score is greater than the lowest score in the list, add the player's score to the list
+        highscores.append(score)
+        # sort the list in descending order
+        highscores.sort(reverse=True)
+        # open the file in write mode
+        highscores_file = open("./assets/scores/highscores.txt", "w")
+        # write the scores to the file
+        for score in highscores:
+            highscores_file.write(str(score) + "\n")
+        # close the file
+        highscores_file.close()
 
 
 def check_collision():
@@ -84,10 +113,6 @@ def check_collision():
                 pygame.mixer.music.load("./assets/music/opening-track.wav")
                 pygame.mixer.music.play(loops=-1, fade_ms=500)
 
-                # Draw the screen black
-                pygame.draw.rect(
-                    DISPLAYSURF, (0, 0, 0), (0, 0, globals.WIDTH, globals.HEIGHT)
-                )
                 return True
 
         # check if the player is colliding with a powerup
@@ -141,13 +166,18 @@ while True:  # main game loop
             pygame.quit()
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            if display_splash:
+            if display_splash or game_over:
                 display_splash = False
+                game_over = False
 
                 # Hide the splash screen
                 pygame.draw.rect(
                     DISPLAYSURF, (0, 0, 0), (0, 0, globals.WIDTH, globals.HEIGHT)
                 )
+
+                # Reset the player and obstacles
+                game_objects.reset()
+                player = notes.Player()
 
                 # Stop the current music and unload it
                 pygame.mixer.music.stop()
@@ -189,9 +219,18 @@ while True:  # main game loop
 
     elif game_over:
         # Display game over screen
-        game_over_lines = game_over_func(player.score)
+        (game_over_lines, (prompt_text, prompt_text_rect)) = game_over_func(
+            player.score, read_from_file()
+        )
         for line in game_over_lines:
             DISPLAYSURF.blit(line[0], line[1])
+
+        if show_prompt:
+            DISPLAYSURF.blit(prompt_text, prompt_text_rect)
+        else:
+            pygame.draw.rect(
+                DISPLAYSURF, (0, 0, 0), (0, 600, globals.WIDTH, globals.HEIGHT - 100)
+            )
 
     else:
         # Display the player
@@ -201,6 +240,15 @@ while True:  # main game loop
         # player.check_collision()
         is_game_over = check_collision()
         if is_game_over:
+            # Draw the screen black
+            pygame.draw.rect(
+                DISPLAYSURF, (0, 0, 0), (0, 0, globals.WIDTH, globals.HEIGHT)
+            )
+
+            # Write the score to the highscores file
+            write_to_file(int(player.score))
+
+            is_game_over = False
             continue
 
         # Display the hit count

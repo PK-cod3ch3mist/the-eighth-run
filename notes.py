@@ -16,7 +16,7 @@ class Note(pygame.sprite.Sprite):
         y       : int
     """
 
-    def __init__(self, image, x, y, offset_x=0, offset_y=0):
+    def __init__(self, image, x, y, offset_x=0, offset_y=0, size_y=66):
         """
         Initialize a Note object
 
@@ -29,9 +29,18 @@ class Note(pygame.sprite.Sprite):
         self.image = image
         self.x = x
         self.y = y
-        self.offset_x = offset_x
+
         self.offset_y = offset_y
+        # Resize image keeping the aspect ration intact
+        self.image = pygame.transform.scale(
+            self.image,
+            (self.image.get_width() * (size_y / self.image.get_height()), size_y),
+        )
+
+        self.offset_x = offset_x + self.image.get_width() / 2
+
         self.rect = self.image.get_rect(center=(x + offset_x, y + offset_y))
+        self.rect.center = (self.x + self.offset_x, self.y + self.offset_y)
         self.mask = pygame.mask.from_surface(self.image.convert_alpha())
         self.orig_image = self.image.copy()
 
@@ -60,10 +69,10 @@ class Player(Note):
     def __init__(
         self,
         image=pygame.image.load("assets/images/eight-note.png"),
-        x=40,
+        x=20,
         staff_loc=2,
         offset_x=0,
-        offset_y=-20,
+        offset_y=-22,
     ):
         """Set default position of the player class at third staff line in the beginning"""
         self.staff_loc = staff_loc

@@ -31,18 +31,18 @@ class Powerup(notes.Note):
         This is done so we can randomly generate powerups later on in the game
         """
         self.powerup_type = powerup_type
-        image = "assets/images/"
+        image = "assets/images/rest.png"
         if powerup_type == 0:
-            image += "whole-rest.png"
-            offset_y = 7
+            offset_y = 10
             self.staff_loc = 1
         elif powerup_type == 1:
-            image += "half-rest.png"
-            offset_y = -7
+            offset_y = -10
             self.staff_loc = 2
 
         image = pygame.image.load(image)
-        super().__init__(image, x, globals.STAFFPOS[self.staff_loc], offset_x, offset_y)
+        super().__init__(
+            image, x, globals.STAFFPOS[self.staff_loc], offset_x, offset_y, size_y=22
+        )
         self.color_powerup()
 
     def color_powerup(self):

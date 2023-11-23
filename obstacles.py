@@ -21,7 +21,7 @@ class Obstacle(notes.Note):
     """
 
     def __init__(
-        self, note_type, staff_loc, x=globals.WIDTH - 20, offset_x=0, offset_y=-20
+        self, note_type, staff_loc, x=globals.WIDTH - 20, offset_x=0, offset_y=-22
     ):
         """
         Assign an obstacle note based upon a note_type argument provided.
@@ -31,9 +31,11 @@ class Obstacle(notes.Note):
         self.staff_loc = staff_loc
         # FIXME: Change the offset x values so that all the notes align up properly on the left edge
         image = "assets/images/"
+        size_y = 66
         if note_type == 0:
             image += "whole-note.png"
             offset_y = 0
+            size_y = 24
         elif note_type == 1:
             image += "half-note.png"
         elif note_type == 2:
@@ -42,13 +44,13 @@ class Obstacle(notes.Note):
             image += "eight-note.png"
         elif note_type == 4:
             image += "eight-line.png"
-            offset_x = 15
         elif note_type == 5:
             image += "sixteenth-notes.png"
-            offset_x = 35
 
         image = pygame.image.load(image)
-        super().__init__(image, x, globals.STAFFPOS[staff_loc], offset_x, offset_y)
+        super().__init__(
+            image, x, globals.STAFFPOS[staff_loc], offset_x, offset_y, size_y=size_y
+        )
         colorImage = pygame.Surface(self.orig_image.get_size()).convert_alpha()
         colorImage.fill((255, 100, 100, 255))
         self.image.blit(colorImage, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
