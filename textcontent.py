@@ -90,9 +90,10 @@ def setup_splash_screen():
     )
     info_lines.append(
         general_text(
-            "Use the up and down arrow keys to move the player (green)",
+            "Use up/down arrow keys or W/S keys to move the player (green)",
             globals.WIDTH / 2,
             250,
+            color=(100, 255, 100),
         )
     )
     info_lines.append(

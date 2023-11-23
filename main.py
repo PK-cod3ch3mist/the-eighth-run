@@ -158,9 +158,9 @@ while True:  # main game loop
                 pygame.mixer.music.play(loops=-1, fade_ms=0)
                 continue
 
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP or event.key == pygame.K_w:
                 dir = globals.Direction.UP
-            elif event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 dir = globals.Direction.DOWN
             else:
                 dir = None
