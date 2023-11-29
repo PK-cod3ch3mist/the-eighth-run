@@ -72,9 +72,13 @@ def write_to_file(score: int):
         highscores.sort(reverse=True)
         # open the file in write mode
         highscores_file = open("./assets/scores/highscores.txt", "w")
-        # write the scores to the file
+        # write the top 3 scores to the file
+        i = 1
         for score in highscores:
             highscores_file.write(str(score) + "\n")
+            i += 1
+            if i > 3:
+                break
         # close the file
         highscores_file.close()
 
