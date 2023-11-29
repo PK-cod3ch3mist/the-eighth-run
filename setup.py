@@ -14,10 +14,13 @@ executables = [
     ),
 ]
 
+bdist_dmg_options = {"applications_shortcut": True, "volume_label": "The Eighth Run"}
+
 cx_Freeze.setup(
     name="The Eighth Run",
     version="1.0",
     description="A game made for the GitHub Game Off 2023",
+    author="Pratyush Kumar",
     options={"build_exe": {"packages": ["pygame"], "include_files": ["assets"]}},
     executables=executables,
 )
