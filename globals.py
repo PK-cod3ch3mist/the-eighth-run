@@ -36,6 +36,8 @@ STAFFSOUNDS = (
     pygame.mixer.Sound("assets/sounds/D4.wav"),
     pygame.mixer.Sound("assets/sounds/F4.wav"),
 )
+for sound in STAFFSOUNDS:
+    sound.set_volume(0.25)
 
 TOTAL_STAFFS = len(STAFFSOUNDS)
 TOTAL_NOTES = 6

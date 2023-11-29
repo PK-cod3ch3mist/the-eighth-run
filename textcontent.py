@@ -42,38 +42,59 @@ def general_text(
 
 def game_over_func(score: int, highscores: list):
     game_over_text, game_over_text_rect = general_text(
-        "Game Over", globals.WIDTH / 2, 100, head_level=0
+        "Game Over", globals.WIDTH / 2, 75, head_level=0
     )
     lines = [(game_over_text, game_over_text_rect)]
     lines.append(
         general_text(
             "Your Score: " + str(int(score)),
             pos_x=globals.WIDTH / 2,
-            pos_y=200,
+            pos_y=150,
             l_align=0,
         )
     )
-    lines.append(general_text("Highscores:", globals.WIDTH / 2, 250, head_level=1))
-    y_position = 300
+    lines.append(general_text("Highscores:", globals.WIDTH / 2, 200, head_level=1))
+    y_position = 250
     num = 1
     for s in highscores:
         lines.append(
             general_text(str(num) + ". " + str(s), globals.WIDTH / 2, y_position)
         )
         y_position += 50
+        num += 1
 
     prompt_text, prompt_text_rect = general_text(
-        "Press any key to restart", globals.WIDTH / 2, globals.HEIGHT - 100
+        "Press any key to restart", globals.WIDTH / 2, globals.HEIGHT - 50
     )
-    # TODO: Add credits if any
-    # lines.append(
-    #     general_text(
-    #         "Credits:",
-    #         pos_x=globals.WIDTH / 2,
-    #         pos_y=globals.HEIGHT / 2 + 200,
-    #         head_level=1,
-    #     )
-    # )
+    # TODO: Add credits if any in slight grey color
+    y_position += 25
+    lines.append(
+        general_text(
+            "Credits:",
+            pos_x=globals.WIDTH / 2,
+            pos_y=y_position,
+            head_level=1,
+            color=(150, 150, 150),
+        )
+    )
+    y_position += 50
+    lines.append(
+        general_text(
+            "Developed by: Pratyush Kumar",
+            globals.WIDTH / 2,
+            y_position,
+            color=(150, 150, 150),
+        )
+    )
+    y_position += 50
+    lines.append(
+        general_text(
+            "Music by: Pratyush Kumar (developed using GarageBand)",
+            globals.WIDTH / 2,
+            y_position,
+            color=(150, 150, 150),
+        )
+    )
     return (lines, (prompt_text, prompt_text_rect))
 
 
