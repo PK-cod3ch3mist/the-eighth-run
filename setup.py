@@ -10,7 +10,7 @@ import cx_Freeze
 
 executables = [
     cx_Freeze.Executable(
-        script="main.py", icon="assets/icon/icon.ico", target_name="The Eighth Run"
+        script="main.py", icon="icon.ico", target_name="The Eighth Run"
     ),
 ]
 
