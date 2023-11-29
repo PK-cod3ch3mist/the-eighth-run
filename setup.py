@@ -8,10 +8,16 @@
 
 import cx_Freeze
 
-executables = [cx_Freeze.Executable("main.py")]
+executables = [
+    cx_Freeze.Executable(
+        script="main.py", icon="assets/icon/icon.ico", target_name="The Eighth Run"
+    ),
+]
 
 cx_Freeze.setup(
     name="The Eighth Run",
+    version="1.0",
+    description="A game made for the GitHub Game Off 2023",
     options={"build_exe": {"packages": ["pygame"], "include_files": ["assets"]}},
     executables=executables,
 )
