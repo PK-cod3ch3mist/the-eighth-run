@@ -1,5 +1,6 @@
 import random
 import pygame
+import pyautogui
 import sys
 import notes
 import platforms
