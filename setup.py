@@ -43,7 +43,7 @@ bdist_msi_options = {"data": msi_data}
 
 cx_Freeze.setup(
     name="The Eighth Run",
-    version="1.0",
+    version="1.1",
     description="A game made for the GitHub Game Off 2023",
     author="Pratyush Kumar",
     options={
